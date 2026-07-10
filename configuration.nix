@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
@@ -25,6 +25,10 @@
   networking.networkmanager.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  environment.systemPackages = with pkgs; import ./packages.nix {
+    inherit pkgs inputs;
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -99,21 +103,6 @@
   # hardware.apple.touchBar.enable = true;
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-fastfetch
-htop
-neovim  
-lazygit
-git
-ghostty
- wget
- stow
- fish
- bat
-  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
